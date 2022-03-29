@@ -62,7 +62,23 @@ def save():
             password_entry.delete(0, END)
 
 
-# ---------------------------- UI SETUP ------------------------------- #
+def find_password():
+    website = website_entry.get()
+    try:
+        with open("data.json") as data_file:
+            data = json.load(data_file)
+            # print(data)
+    except FileNotFoundError:
+        messagebox.showinfo(title="Error", message="No data file found")
+    else:
+        if website in data:
+            email = data[website]["email"]
+            password = data[website]["password"]
+            messagebox.showinfo(title=website, message=f"Email: {email}\nPassword: {password}")
+        else:
+            messagebox.showinfo(title="Error", message=f"No details for {website} exists.")
+
+            # ---------------------------- UI SETUP ------------------------------- #
 
 
 window = Tk()
@@ -83,19 +99,22 @@ password_label = Label(text="Password")
 password_label.grid(row=3, column=0)
 
 # Entries
-website_entry = Entry(width=35)
-website_entry.grid(row=1, column=1, columnspan=2)
+website_entry = Entry(width=22)
+website_entry.grid(row=1, column=1, sticky="W")
 website_entry.focus_set()
 email_entry = Entry(width=35)
-email_entry.grid(row=2, column=1, columnspan=2)
+email_entry.grid(row=2, column=1, columnspan=2, sticky="W")
 email_entry.insert(0, 'iambasith123@gmail.com')
 
-password_entry = Entry(width=23)
+password_entry = Entry(width=22)
 password_entry.grid(row=3, column=1, sticky='W')
 
-generate_pass_button = Button(text="Generate Password", command=generate_password)
+search_button = Button(text="Search", width=10, command=find_password)
+search_button.grid(row=1, column=1, sticky="E")
+generate_pass_button = Button(text="Generate", width=10, command=generate_password)
 generate_pass_button.grid(row=3, column=1, sticky='E')
-add_button = Button(text="Add", width=30, command=save)
-add_button.grid(row=4, column=1, columnspan=2)
+
+add_button = Button(text="Add", width=28, command=save)
+add_button.grid(row=4, column=1, columnspan=2, sticky='W')
 
 window.mainloop()
